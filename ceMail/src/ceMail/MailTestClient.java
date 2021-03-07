@@ -4,7 +4,6 @@ import java.util.Arrays;
 import edu.princeton.cs.algs4.StdOut;
 
 public class MailTestClient {
-
     public static void main(String[] args) {
         Mail[] allMail = {
                 new Mail(DeliveryType.AIR, "YTWEW"),
@@ -32,5 +31,4 @@ public class MailTestClient {
         }
         StdOut.println();
     }
-
 }

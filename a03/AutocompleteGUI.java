@@ -41,7 +41,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputAdapter;
 
-import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.introcs.In;
 
 public class AutocompleteGUI extends JFrame {
     // for serializable classes
@@ -200,7 +200,7 @@ public class AutocompleteGUI extends JFrame {
                     }
                     long weight = Long.parseLong(line.substring(0, tab).trim());
                     String query = line.substring(tab + 1);
-                    terms[i] = new Term(query, (int) weight);
+                    terms[i] = new Term(query, weight);
                 }
             }
             catch (Exception e) {
@@ -660,4 +660,4 @@ public class AutocompleteGUI extends JFrame {
                     }
                 });
     }
-}
+}}

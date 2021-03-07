@@ -8,10 +8,9 @@ public class Mail implements Comparable<Mail> {
     static String mailCode; // store a five-letter code that consists of all upper-case letters
     static StringBuilder sb = new StringBuilder();
 
-    public Mail(DeliveryType type, String mailCode) {
-
-        this.type = type;
-        this.mailCode = mailCode;
+    public Mail(DeliveryType dt, String code) {
+        this.type = dt;
+        this.mailCode = code;
 
     }
 
@@ -45,12 +44,19 @@ public class Mail implements Comparable<Mail> {
 
     }
 
+    public void setType(DeliveryType type) { this.type = type; }
+    public void setMailCode(String code) { this.mailCode = code; }
+    public DeliveryType getType() { return type; }
+    public String getMailCode() { return mailCode; }
+
+    @Override
     public String toString() {
         String mailInfo = this.mailCode + "(" + this.type + ")";
         return mailInfo;
 
     }
 
+    @Override
     public int compareTo(Mail mail) {
         int result = this.type.compareTo(mail.type);
 
@@ -59,20 +65,11 @@ public class Mail implements Comparable<Mail> {
 
         }
 
-        return result;
+        return this.type.compareTo(mail.type);
     }
 
-    public void setType(DeliveryType type) { this.type = type; }
-    public void setMailCode(String code) { this.mailCode = code; }
-
-    public DeliveryType getType() { return type; }
-    public String getMailCode() { return mailCode; }
-
     public static void main(String args[]) {
-        Mail mail = new Mail();
-
-        for(int i = 0; i < 100; i++)
-            System.out.println(mail.randomType());
+//        Mail mail = new Mail();
 
     }
 

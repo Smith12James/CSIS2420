@@ -22,14 +22,15 @@ public class Term implements Comparable<Term> {
     public Term(String query, double weight) {
 
         if (query.equals(null)) {
-
             throw new NullPointerException();
-        } else if (weight < 0) {
 
+        } else if (weight < 0) {
             throw new IllegalArgumentException();
+
         } else {
             this.query = query;
             this.weight = weight;
+
         }
     }
 
@@ -66,16 +67,24 @@ public class Term implements Comparable<Term> {
      */
     public static Comparator<Term> byPrefixOrder(int r) {
 
-        if (r < 0) {
-            throw new IllegalArgumentException();
-        }
+        if (r < 0) { throw new IllegalArgumentException(); }
 
         return new Comparator<Term>() {
 
             @Override
             public int compare(Term o1, Term o2) {
 
-                return o1.query.substring(0, r).compareTo(o2.query.substring(0, r));
+//                if(o1.query == null || o2.query == null) {
+//                    throw new IllegalArgumentException();
+//
+//                }
+
+                int len1 = o1.query.length();
+                int len2 = o2.query.length();
+                int k = Math.min(len2, Math.min(len1, r));
+
+                return o1.query.substring(0, k).compareTo(o2.query.substring(0, k));
+
             }
         };
     }

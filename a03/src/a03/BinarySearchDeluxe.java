@@ -11,115 +11,106 @@ import java.util.Comparator;
 public class BinarySearchDeluxe {
 
     /**
-     *
      * @param <Key>
      * @param a
      * @param key
      * @param comparator
      * @return The index of the first key in a[] that equals the search key, or -1
-     *         if no such key exists in the array.
+     * if no such key exists in the array.
      */
 
     // Return the index of the first key in a[] that equals the search key, or -1 if no such key.
     public static <Key> int firstIndexOf(Key[] a, Key key, Comparator<Key> comparator) {
 
-        if (a.equals(null) || key.equals(null) || comparator.equals(null)) {
+        if (a == null || key == null || comparator == null) {
+            throw new java.lang.NullPointerException("null arguments not allowed");
 
-            throw new NullPointerException();
         }
 
-        else {
+        int left = 0;
+        int right = a.length - 1;
+        if (comparator.compare(a[0], key) == 0) { return 0; }
 
-            int left = 0;
-            int right = a.length - 1;
-            int firstIndex = -1;
-            while (left <= right) {
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
 
-                int mid = (left + right) / 2;
-                if (comparator.compare(a[mid], key) > 0) {
+            if (comparator.compare(key, a[mid]) < 0) {
+                right = mid - 1;
 
-                    right = mid - 1;
-                } else if (comparator.compare(a[mid], key) < 0) {
+            } else if (comparator.compare(key, a[mid]) > 0) {
+                left = mid + 1;
 
-                    left = mid + 1;
-                }
+            } else if (comparator.compare(a[mid - 1], a[mid]) == 0) {
+                right = mid - 1;
 
-                else {
+            } else {
+                return mid;
 
-                    firstIndex = mid;
-                    right = mid - 1;
-                }
             }
-            return firstIndex;
+
         }
+        return -1;
 
     }
 
     /**
-     *
-     *
      * @param <Key>
      * @param a
      * @param key
      * @param comparator
      * @return The index of the last key in a[] that equals the search key, or -1 if
-     *         no such key exists in the array.
+     * no such key exists in the array.
      */
 
     // Return the index of the last key in a[] that equals the search key, or -1 if no such key.
     public static <Key> int lastIndexOf(Key[] a, Key key, Comparator<Key> comparator) {
 
-        if (a.equals(null) || key.equals(null) || comparator.equals(null)) {
+        if (a == null || key == null || comparator == null)
+            throw new java.lang.NullPointerException("null arguments not allowed");
+        int left = 0;
+        int right = a.length - 1;
+        if (comparator.compare(a[right], key) == 0) return right;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
 
-            throw new NullPointerException();
-        }
+            if (comparator.compare(key, a[mid]) < 0) {
+                right = mid - 1;
 
-        else {
+            } else if (comparator.compare(key, a[mid]) > 0) {
+                left = mid + 1;
 
-            int left = 0;
-            int right = a.length - 1;
-            int lastIndex = -1;
-            while (left <= right) {
+            } else if(comparator.compare(a[mid +1],a[mid])==0) {
+                left =mid +1;
 
-                int mid = (left + right) / 2;
-                if (comparator.compare(a[mid], key) > 0) {
+            } else {
+                return mid;
 
-                    right = mid - 1;
-                } else if (comparator.compare(a[mid], key) < 0) {
-
-                    left = mid + 1;
-                }
-
-                else {
-
-                    lastIndex = mid;
-                    left = mid + 1;
-                }
             }
-            return lastIndex;
         }
+        return -1;
+
     }
 
-    /*
+    /**
      * Main is used for testing purposes
      */
 
     public static void main(String[] args) {
 
         String[] testingStrings = new String[25];
-        for (int i = 0; i < testingStrings.length; i++) {
 
+        for (int i = 0; i < testingStrings.length; i++) {
             if (i % 2 != 0) {
                 testingStrings[i] = "Finny";
+
             } else {
                 testingStrings[i] = "this is the first test!";
+
             }
         }
 
         Arrays.sort(testingStrings, Collections.reverseOrder());
-
         System.out.println("This is the result of String Arrays\n-----------------------------------");
-
         System.out.println("First Occurrance of 'Finny' in Array at index: "
                 + firstIndexOf(testingStrings, "Finny", Collections.reverseOrder()));
 

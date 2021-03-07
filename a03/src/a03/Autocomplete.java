@@ -1,19 +1,93 @@
 package a03;
 
-public class Autocomplete {
+/**
+ * @authors James Smith and Riley Westergard
+ */
 
-    Term[] term;
+import java.util.Arrays;
+import edu.princeton.cs.algs4.Quick;
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdIn;
+import edu.princeton.cs.algs4.StdOut;
 
+public final class Autocomplete {
+    private final int n;
+    private final Term[] terms;
+
+    // Initialize the data structure from the given array of terms.
     public Autocomplete(Term[] terms) {
+        if(terms == null) { throw new NullPointerException(); }
+
+        this.n = terms.length;
+        this.terms = new Term[n];
+
+        System.arraycopy(terms, 0, this.terms, 0, n);
+
+        Quick.sort(this.terms);
+
+    }
+
+    // Return all terms that start with the given prefix, in descending order of weight.
+    // if no matches return an array of size 0
+    public Term[] allMatches(String prefix) {
+        if(prefix == null) throw new java.lang.NullPointerException();
+
+        int first1 = BinarySearchDeluxe.firstIndexOf(terms, new Term(prefix, 0), Term.byPrefixOrder(prefix.length()));
+        if(first1 == -1) return new Term[0];
+
+        int last1 = BinarySearchDeluxe.lastIndexOf(terms, new Term(prefix, 0), Term.byPrefixOrder(prefix.length()));
+
+        Term[] temp1 = new Term[1+last1-first1];
+
+        for(int i = 0; i<temp1.length; i++){
+            temp1[i] = terms[first1++];
+        }
+        Arrays.sort(temp1, Term.byReverseWeightOrder());
+
+        return temp1;
+    }
+
+    // Return the number of terms that start with the given prefix.
+    public int numberOfMatches(String prefix) {
+        if(prefix.equals(null)) { throw new NullPointerException(); }
+
+        Term searchTerm = new Term(prefix, 0);
+
+        int first1 = BinarySearchDeluxe.firstIndexOf(terms, searchTerm,Term.byPrefixOrder(prefix.length()));
+        int last1 = BinarySearchDeluxe.lastIndexOf(terms, searchTerm,Term.byPrefixOrder(prefix.length()));
+        int found =  1 + (last1 - first1);
+
+        if(first1 <= 0) { return 0; }
+        if(found <= 0) { return 0; }
+
+        return found;
+
     }
 
     public static void main(String[] args) {
-		
-		
-		
-	}
-
-    public Term[] allMatches(String text) {
-        return new Term[]{this.term[0]};
+//        String filename = "src/a03/cities.txt";
+//
+//        In in = new In(filename);
+//        int num = in.readInt();
+//        Term[] terms = new Term[num];
+//
+//        for (int i = 0; i < num; i++) {
+//            double weight = in.readDouble();
+//            in.readChar();
+//            String query = in.readString();
+//            terms[i] = new Term(query, weight);
+//        }
+//
+//        int k = 10;
+//        Autocomplete autocomplete = new Autocomplete(terms);
+//        while (StdIn.hasNextLine()) {
+//            String prefix = StdIn.readLine();
+//            Term[] results = autocomplete.allMatches(prefix);
+//
+//            for (int i = 0; i < Math.min(k, results.length); i++) {
+//                StdOut.println("results" + results[i]);
+//            }
+//        }
     }
+
 }
