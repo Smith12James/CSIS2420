@@ -3,10 +3,8 @@ package ceMail;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class Mail implements Comparable<Mail> {
-
-    static DeliveryType type;
-    static String mailCode; // store a five-letter code that consists of all upper-case letters
-    static StringBuilder sb = new StringBuilder();
+    private DeliveryType type;
+    private String mailCode; // store a five-letter code that consists of all upper-case letters
 
     public Mail(DeliveryType dt, String code) {
         this.type = dt;
@@ -15,26 +13,20 @@ public class Mail implements Comparable<Mail> {
     }
 
     public Mail() {
-
-        this.type = randomType();
         this.mailCode = randomMailCode();
-
-        if (this.mailCode.length() != 5) {
-            throw new IllegalArgumentException();
-
-        }
+        this.type = randomType();
 
     }
 
     public static String randomMailCode() {
+        StringBuilder sb = new StringBuilder();
+
         for(int i = 0; i < 5; i++) {
             int tempNum = StdRandom.uniform(65,91);
             char temp = (char) tempNum;
             sb.append(temp);
         }
-        String mailCode = sb.toString();
-        sb.delete(0, sb.length());
-        return mailCode;
+        return sb.toString();
 
     }
 
@@ -44,17 +36,8 @@ public class Mail implements Comparable<Mail> {
 
     }
 
-    public void setType(DeliveryType type) { this.type = type; }
-    public void setMailCode(String code) { this.mailCode = code; }
-    public DeliveryType getType() { return type; }
-    public String getMailCode() { return mailCode; }
-
     @Override
-    public String toString() {
-        String mailInfo = this.mailCode + "(" + this.type + ")";
-        return mailInfo;
-
-    }
+    public String toString() {  return this.mailCode + "(" + this.type + ")";   }
 
     @Override
     public int compareTo(Mail mail) {
@@ -69,7 +52,6 @@ public class Mail implements Comparable<Mail> {
     }
 
     public static void main(String args[]) {
-//        Mail mail = new Mail();
 
     }
 

@@ -14,8 +14,10 @@ public class DemoHeap {
 
         }
 
+        int i = 1;
         for(Mail m : max) {
-            StdOut.println(m);
+            StdOut.println(i + ",\t" + m);
+            i++;
         }
 
     }
