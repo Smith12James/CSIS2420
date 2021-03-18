@@ -495,7 +495,7 @@ public class BSTdeluxe<Key extends Comparable<Key>, Value> {
      */
 
     /**
-     * return keys in pre-order
+     * @return keys in pre-order
      */
 
     public Iterable<Key> preOrder() {
@@ -512,6 +512,10 @@ public class BSTdeluxe<Key extends Comparable<Key>, Value> {
 
     }
 
+    /**
+     * @return keys in-order
+     */
+
     public Iterable<Key> inOrder() {
         Queue<Key> keys = new Queue<Key>();
         inOrder(root, keys);
@@ -525,6 +529,10 @@ public class BSTdeluxe<Key extends Comparable<Key>, Value> {
         inOrder(x.right, q);
 
     }
+
+    /**
+     * @return keys in post-order
+     */
 
     public Iterable<Key> postOrder() {
         Queue<Key> keys = new Queue<Key>();
