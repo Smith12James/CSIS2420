@@ -1,9 +1,7 @@
 package a04;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
-import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
@@ -162,7 +160,7 @@ public class Board{
 
     // all neighboring boards
     public Iterable<Board> neighbors()  {
-        Stack<Board> queue = new Stack<Board>();
+        Stack<Board> stack = new Stack<Board>();
 
         //check if i+-1 and j+-1 are available, if so then we can exch()
         int zColumn = 0; //Location of the 0 column
@@ -177,14 +175,23 @@ public class Board{
                 }
             }
         }
-        //There can be only 2-4 moves a board. These loops should determin if an exchange can be done
 
-        if(zColumn + 1 != size ) queue.push(exch(createACopy(), zColumn, zRow, zColumn + 1, zRow)); // Exchanges to the right
-        if(zColumn != 0) queue.push(exch(createACopy(), zColumn, zRow, zColumn - 1, zRow)); // Exchanges to the left
-        if(zRow + 1 != size) queue.push(exch(createACopy(), zColumn, zRow, zColumn, zRow + 1)); // Exchanges up one
-        if(zRow != 0) queue.push(exch(createACopy(), zColumn, zRow, zColumn, zRow - 1)); // Exchanges down one
+        int[][] mainBoard = this.board.clone();
 
-        return queue;
+        //There can be only 2-4 moves a board. These loops should determine if an exchange can be done
+        if(zColumn + 1 != size ) stack.push(exch(createACopy(), zColumn, zRow, zColumn + 1, zRow)); // Exchanges to the right
+        resetBoard(mainBoard);
+
+        if(zColumn != 0) stack.push(exch(createACopy(), zColumn, zRow, zColumn - 1, zRow)); // Exchanges to the left
+        resetBoard(mainBoard);
+
+        if(zRow + 1 != size) stack.push(exch(createACopy(), zColumn, zRow, zColumn, zRow + 1)); // Exchanges up one
+        resetBoard(mainBoard);
+
+        if(zRow != 0) stack.push(exch(createACopy(), zColumn, zRow, zColumn, zRow - 1)); // Exchanges down one
+        resetBoard(mainBoard);
+
+        return stack;
     }
 
     private int[][] createACopy() {
@@ -199,6 +206,12 @@ public class Board{
 
         a[i2][j2] = temp1;
         a[i][j] = temp2;
+
+        return new Board(a);
+    }
+
+    private Board resetBoard(int[][] a) {
+        this.board = a.clone();
 
         return new Board(a);
     }
