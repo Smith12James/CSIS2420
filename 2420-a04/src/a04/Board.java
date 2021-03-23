@@ -56,16 +56,13 @@ public class Board{
     public int hamming() {
 
         int outOfPlace = 0; //number of slots that are incorrect
-        int number; //the number to be compared
-        int row, col;
+//        int number; //the number to be compared
+//        int row, col;
 
         //for loop to iterate through the array to find which slots are incorrect
-        for (int i = 1; i < size*size; i++) {
-            row = i / size;
-            col = i % size;
-            number = board[row][col];
-            if(number != i + 1) {
-                outOfPlace++;
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board.length; j++) {
+                if(board[i][j] != solution[i][j]) outOfPlace+=1;
             }
         }
         return outOfPlace;
@@ -243,6 +240,8 @@ public class Board{
         StdOut.println(myBoard);
         StdOut.println("Neighbor: ");
         StdOut.println(myBoard.neighbors());
+        StdOut.println("Hamming: ");
+        StdOut.println(myBoard.hamming());
 //        StdOut.println("Solution: ");
 //        StdOut.println(new Board(myBoard.getGoal()));
 //        StdOut.println("Manhattan Value: " + myBoard.manhattan());
@@ -255,6 +254,8 @@ public class Board{
         StdOut.println(myBoard3);
         StdOut.println("Neighbor: ");
         StdOut.println(myBoard3.neighbors());
+        StdOut.println("Hamming: ");
+        StdOut.println(myBoard3.hamming());
 //        StdOut.println("Solution: ");
 //        StdOut.println(new Board3(myBoard3.getGoal()));
 //        StdOut.println("Manhattan Value: " + myBoard3.manhattan());
@@ -267,6 +268,8 @@ public class Board{
         StdOut.println(myBoard2);
         StdOut.println("Neighbor: ");
         StdOut.println(myBoard2.neighbors());
+        StdOut.println("Hamming: ");
+        StdOut.println(myBoard2.hamming());
 //        StdOut.println("Solution: ");
 //        StdOut.println(new Board(myBoard2.getGoal()));
 //        StdOut.println("Manhattan Value: " + myBoard2.manhattan());
