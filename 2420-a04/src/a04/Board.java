@@ -106,25 +106,18 @@ public class Board{
 
     // is this board the goal board?
     public boolean isGoal()  {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if(board[i][j] != solution[i][j]) {
-                    return false;
-                }
-            }
-        }
+        return hamming() == 0;
 
-        return true;
     }
 
     // is this board solvable?
     // this is based of inversions that checks for the pairs of inversions
     //https://www.geeksforgeeks.org/check-instance-8-puzzle-solvable
-    public boolean isSolvable()
-    {
+    public boolean isSolvable() {
         int zeroRow = 0;
         int previous = 0;
         int inv_count = 0;
+        // find 0 index
         for (int i = 0; i < size; i++) {
             for (int j = i + 1; j < size; j++) {
                 if(board[i][j] == 0) zeroRow = j;
@@ -141,8 +134,10 @@ public class Board{
         }
 
         if (size % 2 != 0 && inv_count % 2 == 0) return true; //Odd boards only need odd inversions
-        if ((inv_count + zeroRow) % 2 == 0) return false; //Even boards need odd number of inversions + the row where 0 is
+        
+        else if ((inv_count + zeroRow) % 2 == 0) return false; //Even boards need odd number of inversions + the row where 0 is
         else return false;
+
     }
 
     // does this board equal y?
@@ -231,22 +226,8 @@ public class Board{
     // unit tests (not graded)
     public static void main(String[] args) {
         int[][] board1 = { { 0, 1, 2 }, { 4, 3, 5 }, { 7, 6, 8 } };
-        int[][] board2 = {{2, 1}, {0,3}};
-        int[][] board3 = {{3,7,11,0},{2,6,10,14},{1,5,13,15},{4,8,12,9}}; // {1 2 3 4}, {5 6 7 8}, {9 10 11 12}, {13 14 15 0}
-
-        Board myBoard = new Board(board1);
-        StdOut.println("----------");
-        StdOut.println("Board: ");
-        StdOut.println(myBoard);
-        StdOut.println("Neighbor: ");
-        StdOut.println(myBoard.neighbors());
-        StdOut.println("Hamming: ");
-        StdOut.println(myBoard.hamming());
-//        StdOut.println("Solution: ");
-//        StdOut.println(new Board(myBoard.getGoal()));
-//        StdOut.println("Manhattan Value: " + myBoard.manhattan());
-//        StdOut.println("Hamming Value: " + myBoard.hamming());
-//        StdOut.println();
+        int[][] board2 = {{ 2, 1 }, { 0,3 }};
+        int[][] board3 = {{ 3, 7, 11, 0 },{ 2, 6, 10, 14 },{ 1, 5, 13, 15 },{ 4, 8, 12, 9 }}; // {1 2 3 4}, {5 6 7 8}, {9 10 11 12}, {13 14 15 0}
 
         Board myBoard3 = new Board(board3);
         StdOut.println("----------");
@@ -262,6 +243,20 @@ public class Board{
 //        StdOut.println("Hamming Value: " + myBoard3.hamming());
 //        StdOut.println();
 
+        Board myBoard = new Board(board1);
+        StdOut.println("----------");
+        StdOut.println("Board: ");
+        StdOut.println(myBoard);
+        StdOut.println("Neighbor: ");
+        StdOut.println(myBoard.neighbors());
+        StdOut.println("Hamming: ");
+        StdOut.println(myBoard.hamming());
+//        StdOut.println("Solution: ");
+//        StdOut.println(new Board(myBoard.getGoal()));
+//        StdOut.println("Manhattan Value: " + myBoard.manhattan());
+//        StdOut.println("Hamming Value: " + myBoard.hamming());
+//        StdOut.println();
+
         Board myBoard2 = new Board(board2);
         StdOut.println("----------");
         StdOut.println("Board: ");
@@ -275,6 +270,11 @@ public class Board{
 //        StdOut.println("Manhattan Value: " + myBoard2.manhattan());
 //        StdOut.println("Hamming Value: " + myBoard2.hamming());
 //        StdOut.println();
+
+        if(myBoard.board == myBoard.solution) {
+            System.out.print(true);
+        }
+        else { System.out.print(false); }
     }
 
 }
