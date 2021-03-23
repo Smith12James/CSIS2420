@@ -16,14 +16,13 @@ public class Board{
     public Board(int[][] a) {
         this.size = a.length;
         this.board = new int[size][size];
-
+        solutionBoard();
         //Copying the passed array to the new array
         for(int i=0; i<size; i++) {
             for(int j=0; j< size; j++) {
                 this.board[i][j]=a[i][j];
             }
         }
-        solutionBoard();
     }
 
     /**
@@ -127,24 +126,26 @@ public class Board{
     public boolean isSolvable()
     {
         int zeroRow = 0;
+        int previous = 0;
         int inv_count = 0;
-        for (int i = 0; i < size*size; i++) {
-            for (int j = i + 1; j < size*size; j++) {
-
+        for (int i = 0; i < size; i++) {
+            for (int j = i + 1; j < size; j++) {
+                if(board[i][j] == 0) zeroRow = j;
+                previous = board[i][j];
                 // Value 0 is used for empty space
-                //checks whether the number before is greater than the number after or an inversion
-                if (board[j][i] > 0 &&
-                        board[j][i] > board[i][j])
-                    inv_count++;
-                if (board[i][j] == 0)
-                    zeroRow = i;
+                for (int k = i; k < size; k++) {
+                    for (int m = j; m < size; m++) {
+                        if (previous > board[k][m]) {
+                            inv_count++;
+                        }
+                    }
+                }
             }
         }
 
-        if (inv_count % 2 == 1 && size % 2 == 1) return false; //Odd boards only need odd inversions
+        if (size % 2 != 0 && inv_count % 2 == 0) return true; //Odd boards only need odd inversions
         if ((inv_count + zeroRow) % 2 == 0) return false; //Even boards need odd number of inversions + the row where 0 is
-
-        return true;
+        else return false;
     }
 
     // does this board equal y?
@@ -153,67 +154,64 @@ public class Board{
         if (y == null || getClass() != y.getClass()
                 || size != yBoard.size || !Arrays.deepEquals(board, yBoard.board))
             return false;
-        if (this.board == y)
+        if (this == y)
             return true;
-        return (board.equals(y));
+        return true;
     }
 
     // all neighboring boards
     public Iterable<Board> neighbors()  {
-        Stack<Board> stack = new Stack<Board>();
+        Stack<Board> queue = new Stack<Board>();
 
         //check if i+-1 and j+-1 are available, if so then we can exch()
         int zColumn = 0; //Location of the 0 column
         int zRow = 0; // location of the 0 row
+        boolean zeroLocation = false;
 
-        // for loop to find where the zero is on the board
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board.length; j++) {
+        //for loop to find where the zero is on the board
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 if(board[i][j] == 0) {
-                    zColumn = i;
-                    zRow = j;
+                    zColumn = j;
+                    zRow = i;
+                    zeroLocation = true;
+                    break;
                 }
+                if(zeroLocation) break;
             }
         }
 
-        int[][] mainBoard = this.board.clone();
-
         //There can be only 2-4 moves a board. These loops should determine if an exchange can be done
-        if(zColumn + 1 != size ) stack.push(exch(createACopy(), zColumn, zRow, zColumn + 1, zRow)); // Exchanges to the right
-        resetBoard(mainBoard);
+        Board boardCopy = new Board(board);
+        boolean inBounds;
 
-        if(zColumn != 0) stack.push(exch(createACopy(), zColumn, zRow, zColumn - 1, zRow)); // Exchanges to the left
-        resetBoard(mainBoard);
+        inBounds = boardCopy.exch(zRow, zColumn, zRow - 1, zColumn);
+        if(inBounds) queue.push(boardCopy);// Exchanges to the left
 
-        if(zRow + 1 != size) stack.push(exch(createACopy(), zColumn, zRow, zColumn, zRow + 1)); // Exchanges up one
-        resetBoard(mainBoard);
+        boardCopy = new Board(board);
+        inBounds = boardCopy.exch(zRow, zColumn, zRow + 1, zColumn);
+        if(inBounds) queue.push(boardCopy); // Exchanges to the right
 
-        if(zRow != 0) stack.push(exch(createACopy(), zColumn, zRow, zColumn, zRow - 1)); // Exchanges down one
-        resetBoard(mainBoard);
+        boardCopy = new Board(board);
+        inBounds = boardCopy.exch(zRow, zColumn, zRow, zColumn - 1); // Exchanges down one
+        if(inBounds) queue.push(boardCopy);
 
-        return stack;
+        boardCopy = new Board(board);
+        inBounds = boardCopy.exch(zRow, zColumn, zRow, zColumn + 1); // Exchanges up one
+        if(inBounds) queue.push(boardCopy);
+
+        return queue;
     }
 
-    private int[][] createACopy() {
-        int[][] newBoard = this.board.clone();
-        return newBoard;
+    public boolean exch(int i, int j, int i2, int j2) {
+        if (i2 < 0 || i2 >= size || j2 < 0 || j2 >= size) {
+            return false;
+        }
 
-    }
-
-    private Board exch(int[][] a, int i, int j, int i2, int j2) {
-        int temp1 = this.board[i][j];
-        int temp2 = this.board[i2][j2];
-
-        a[i2][j2] = temp1;
-        a[i][j] = temp2;
-
-        return new Board(a);
-    }
-
-    private Board resetBoard(int[][] a) {
-        this.board = a.clone();
-
-        return new Board(a);
+        int temp = board[i][j];
+        board[i][j] = board[i2][j2];
+        board[i2][j2] = 0;
+        return true;
     }
 
     // string representation of this board (in the output format specified below)
@@ -235,8 +233,9 @@ public class Board{
 
     // unit tests (not graded)
     public static void main(String[] args) {
-        int[][] board1 = { { 0, 1, 2 }, { 4, 3, 5 }, { 7, 6, 8 } }; // 4
+        int[][] board1 = { { 0, 1, 2 }, { 4, 3, 5 }, { 7, 6, 8 } };
         int[][] board2 = {{2, 1}, {0,3}};
+        int[][] board3 = {{3,7,11,0},{2,6,10,14},{1,5,13,15},{4,8,12,9}}; // {1 2 3 4}, {5 6 7 8}, {9 10 11 12}, {13 14 15 0}
 
         Board myBoard = new Board(board1);
         StdOut.println("----------");
@@ -248,6 +247,18 @@ public class Board{
 //        StdOut.println(new Board(myBoard.getGoal()));
 //        StdOut.println("Manhattan Value: " + myBoard.manhattan());
 //        StdOut.println("Hamming Value: " + myBoard.hamming());
+//        StdOut.println();
+
+        Board myBoard3 = new Board(board3);
+        StdOut.println("----------");
+        StdOut.println("Board: ");
+        StdOut.println(myBoard3);
+        StdOut.println("Neighbor: ");
+        StdOut.println(myBoard3.neighbors());
+//        StdOut.println("Solution: ");
+//        StdOut.println(new Board3(myBoard3.getGoal()));
+//        StdOut.println("Manhattan Value: " + myBoard3.manhattan());
+//        StdOut.println("Hamming Value: " + myBoard3.hamming());
 //        StdOut.println();
 
         Board myBoard2 = new Board(board2);
