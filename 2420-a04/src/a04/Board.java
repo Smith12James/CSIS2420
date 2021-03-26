@@ -153,7 +153,7 @@ public class Board{
 
     // all neighboring boards
     public Iterable<Board> neighbors()  {
-        Stack<Board> queue = new Stack<Board>();
+        Stack<Board> stack = new Stack<Board>();
 
         //check if i+-1 and j+-1 are available, if so then we can exch()
         int zColumn = 0; //Location of the 0 column
@@ -178,24 +178,24 @@ public class Board{
         boolean inBounds;
 
         inBounds = boardCopy.exch(zRow, zColumn, zRow - 1, zColumn);
-        if(inBounds) queue.push(boardCopy);// Exchanges to the left
+        if(inBounds) stack.push(boardCopy);// Exchanges to the left
 
         boardCopy = new Board(board);
         inBounds = boardCopy.exch(zRow, zColumn, zRow + 1, zColumn);
-        if(inBounds) queue.push(boardCopy); // Exchanges to the right
+        if(inBounds) stack.push(boardCopy); // Exchanges to the right
 
         boardCopy = new Board(board);
         inBounds = boardCopy.exch(zRow, zColumn, zRow, zColumn - 1); // Exchanges down one
-        if(inBounds) queue.push(boardCopy);
+        if(inBounds) stack.push(boardCopy);
 
         boardCopy = new Board(board);
         inBounds = boardCopy.exch(zRow, zColumn, zRow, zColumn + 1); // Exchanges up one
-        if(inBounds) queue.push(boardCopy);
+        if(inBounds) stack.push(boardCopy);
 
-        return queue;
+        return stack;
     }
 
-    public boolean exch(int i, int j, int i2, int j2) {
+    private boolean exch(int i, int j, int i2, int j2) {
         if (i2 < 0 || i2 >= size || j2 < 0 || j2 >= size) {
             return false;
         }
