@@ -10,6 +10,9 @@ public class Board{
     int size;
     int[][] board;
     int[][] solution;
+    int[] solution1D;
+    int[] board1D;
+    int zeroPosition;
 
     // construct a board from an N-by-N array of blocks
     // (where blocks[i][j] = block in row i, column j)
@@ -21,6 +24,19 @@ public class Board{
         for(int i=0; i<size; i++) {
             for(int j=0; j< size; j++) {
                 this.board[i][j]=a[i][j];
+            }
+        }
+        board1D = new int[size*size];
+
+        int position = 0;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                board1D[position++] = board[i][j];
+            }
+        }
+        for (int i = 0; i < board1D.length; i++) {
+            if (board1D[i] == 0) {
+                zeroPosition = i;
             }
         }
     }
@@ -45,6 +61,14 @@ public class Board{
                 count++;
             }
         }
+
+        solution1D = new int[size * size];
+        int position = 0;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                solution1D[position++] = solution[i][j];
+            }
+        }
     }
 
     // board size N
@@ -60,10 +84,8 @@ public class Board{
 //        int row, col;
 
         //for loop to iterate through the array to find which slots are incorrect
-        for(int i = 0; i < board.length; i++) {
-            for(int j = 0; j < board.length; j++) {
-                if(board[i][j] != solution[i][j]) outOfPlace+=1;
-            }
+        for(int i = 0; i < size * size; i++) {
+            if(board1D[i] != solution1D[i]) { outOfPlace++; }
         }
         return outOfPlace;
     }
@@ -114,29 +136,36 @@ public class Board{
     // this is based of inversions that checks for the pairs of inversions
     //https://www.geeksforgeeks.org/check-instance-8-puzzle-solvable
     public boolean isSolvable() {
-        int zeroRow = 0;
-        int previous = 0;
-        int inv_count = 0;
-        // find 0 index
-        for (int i = 0; i < size; i++) {
-            for (int j = i + 1; j < size; j++) {
-                if(board[i][j] == 0) zeroRow = j;
-                previous = board[i][j];
-                // Value 0 is used for empty space
-                for (int k = i; k < size; k++) {
-                    for (int m = j; m < size; m++) {
-                        if (previous > board[k][m]) {
-                            inv_count++;
-                        }
-                    }
+
+        int inversions = 0;
+        for (int i = 0; i < size * size - 1; i++) {
+            for (int j = i + 1; j < size * size; j++) {
+                if (board1D[i] > board1D[j] && board1D[i] != 0 && board1D[j] != 0) {
+                    inversions++;
                 }
             }
         }
 
-        if (size % 2 != 0 && inv_count % 2 == 0) return true; //Odd boards only need odd inversions
-        
-        else if ((inv_count + zeroRow) % 2 == 0) return false; //Even boards need odd number of inversions + the row where 0 is
-        else return false;
+        if(size % 2 == 0) {
+            int zeroRow;
+            for (int i = size - 1; i >= 0; i--) {
+                for (int j = size - 1; j >= 0; j--) {
+                    if (board[i][j] == 0) {
+                        zeroRow = size - i;
+                        if ((zeroRow % 2 == 0 && inversions % 2 != 0) ||
+                                (zeroRow % 2 != 0 && inversions % 2 == 0))
+                            return true;
+                        else
+                            return false;
+                    }
+                }
+            }
+        }else { // odd
+            if (inversions % 2 == 0)// solvable if N is odd and inversions is even
+                return true;
+        }
+
+        return false;
 
     }
 
