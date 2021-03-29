@@ -75,14 +75,11 @@ public class Board{
     // number of blocks out of place
     public int hamming() {
         int outOfPlace = 0; //number of slots that are incorrect
-//        int number; //the number to be compared
-//        int row, col;
 
-//        for(int i = 0; i < solution1D.length; i++) {
-//            if(board1D[i] != solution1D[i]) { outOfPlace++; }
-//        }
-
-//        for(int i = 0; i < board1D.length; i++) { if(board1D[i] != (i + 1) && board1D[i] != 0) { outOfPlace++; }}
+        /**
+         * // this hamming solution works best but does not work with solution() in Solver
+         * for(int i = 0; i < board1D.length; i++) { if(board1D[i] != (i + 1) && board1D[i] != 0) { outOfPlace++; }}
+         */
 
         //for loop to iterate through the array to find which slots are incorrect
 
