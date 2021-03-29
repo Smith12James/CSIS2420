@@ -1,27 +1,25 @@
 package a04;
 
+import java.nio.BufferOverflowException;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
+import org.w3c.dom.ranges.RangeException;
 
 public class Solver {
     private Board current; //maybe to test the current board in the while loop
     private int moves;
 
-    MinPQ<Board> open = new MinPQ<Board>(); //neighboring nodes
+    MinPQ<Board> pq = new MinPQ<Board>(); //neighboring nodes
     List<Board> path = new ArrayList<Board>(); //past boards added to a path
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
-        if(initial.equals(null)) throw new NullPointerException(
-                "Board Cannot be NULL");
-
-        if(!initial.isSolvable()) {
-            throw new IllegalArgumentException("Unsolvable Board");
-        }
+        if(initial.equals(null)) { throw new NullPointerException("Board Cannot be NULL"); }
+        if(!initial.isSolvable()) { throw new IllegalArgumentException("Unsolvable Board"); }
 
         this.current = boardCopy(initial); //Making a copy bc good idea
         path.add(current); //Starting the path off with the first board
@@ -32,19 +30,15 @@ public class Solver {
 
     // min number of moves to solve initial board
     public int moves() {
-        return this.moves;
+        if(this.moves == 0) { return 0; }
+        return this.moves - 1;
     }
 
     //This should return the size of the closed list or the amount of past nodes in our path.
-    public int traversalNumber() {
-        return path.size();
+    private int traversalNumber() { return path.size(); }
 
-    }
-
-    // an int to determin the priority of a path
-    public int score(Board neighbor) {
-        return moves + neighbor.hamming();
-    }
+    // an int to determine the priority of a path
+    private int score(Board neighbor) { return moves + neighbor.hamming(); }
 
     // sequence of boards in a shortest solution
     public Iterable<Board> solution(){
@@ -53,46 +47,26 @@ public class Solver {
 
             Board lowestBoard = current; //Board to be the chosen one
             int lowestCost = 0; //cost of this chosen board
+
             for(Board neighbor : current.neighbors()) { //iterating through the returned queue from Board.neighbors
                 if(score(neighbor) < lowestCost || lowestCost == 0) { //comparing costs or setting the initial cost
-                    lowestBoard=neighbor; //reassigning
+                    lowestBoard = neighbor; //reassigning
                     lowestCost = score(neighbor); //reassigning
+                    int prevLowestCost = lowestCost;
                     moves++; //increasing moves
-                    System.out.println(moves); //just so im not in an infinte loop
+//                    System.out.println(neighbor.toString());
+//                    System.out.println(moves); // check infinite loop
+//                    System.out.println(current.hamming());
+//                    System.out.println();
+//                    System.out.println();
+                    if(this.moves >= 500) { throw new BufferOverflowException(); }
+                    if(current.hamming() == 0) { path.add(current); return path; };
                 }
             }
             current = lowestBoard;
             path.add(lowestBoard);
 
         }
-
-    	/*
-        Stack stack = new Stack();
-        Queue q = new Queue();
-        Board board1 = boardCopy(this.board);
-        this.solution = board1.solution;
-        q.enqueue(this.board);
-        Stack neighbors = new Stack();
-        neighbors.push(board1.neighbors());
-
-        Board tempBoard = (Board) stack.pop();
-        if(tempBoard.isGoal()) {
-            q.enqueue(tempBoard);
-            return q;
-        }
-		*/
-
-
-//        for(int i = 0; i < stack.size(); i++) {
-//            Board tempBoard = (Board) q.dequeue();
-//            if(tempBoard.isGoal()) {
-//                return q;
-//
-//            } else if() {
-//                board1 = boardCopy(board1);
-//
-//            }
-//        }
         return path;
 
     }
@@ -111,9 +85,11 @@ public class Solver {
         In in = new In("src/a04/puzzle04.txt");
         int N = in.readInt();
         int[][] blocks = new int[N][N];
-        for (int i = 0; i < N; i++)
-            for (int j = 0; j < N; j++)
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
                 blocks[i][j] = in.readInt();
+            }
+        }
         Board initial = new Board(blocks);
 
         // check if puzzle is solvable; if so, solve it and output solution

@@ -10,8 +10,8 @@ public class Board{
     int size;
     int[][] board;
     int[][] solution;
-    int[] solution1D;
     int[] board1D;
+    int[] solution1D;
     int zeroPosition;
 
     // construct a board from an N-by-N array of blocks
@@ -19,26 +19,29 @@ public class Board{
     public Board(int[][] a) {
         this.size = a.length;
         this.board = new int[size][size];
-        solutionBoard();
+        board1D = new int[size*size];
+
         //Copying the passed array to the new array
-        for(int i=0; i<size; i++) {
-            for(int j=0; j< size; j++) {
+        for(int i = 0; i < size; i++) {
+            for(int j = 0; j < size; j++) {
                 this.board[i][j]=a[i][j];
             }
         }
-        board1D = new int[size*size];
 
         int position = 0;
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                board1D[position++] = board[i][j];
+                board1D[position++] = this.board[i][j];
             }
         }
+
         for (int i = 0; i < board1D.length; i++) {
             if (board1D[i] == 0) {
                 zeroPosition = i;
             }
         }
+
+        solutionBoard();
     }
 
     /**
@@ -52,6 +55,7 @@ public class Board{
          * {4,5,6}
          * {7,8,0}
          */
+
         solution = new int[size][size];
         int count = 1;
         for (int i = 0; i < size; i++) {
@@ -61,33 +65,34 @@ public class Board{
                 count++;
             }
         }
-
-        solution1D = new int[size * size];
-        int position = 0;
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                solution1D[position++] = solution[i][j];
-            }
-        }
     }
 
     // board size N
     public int size() {
-        return size;
+        return this.size;
     }
 
     // number of blocks out of place
     public int hamming() {
-
         int outOfPlace = 0; //number of slots that are incorrect
 //        int number; //the number to be compared
 //        int row, col;
 
+//        for(int i = 0; i < solution1D.length; i++) {
+//            if(board1D[i] != solution1D[i]) { outOfPlace++; }
+//        }
+
+//        for(int i = 0; i < board1D.length; i++) { if(board1D[i] != (i + 1) && board1D[i] != 0) { outOfPlace++; }}
+
         //for loop to iterate through the array to find which slots are incorrect
-        for(int i = 0; i < size * size; i++) {
-            if(board1D[i] != solution1D[i]) { outOfPlace++; }
+
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board.length; j++) {
+                if(board[i][j] != solution[i][j]) outOfPlace++;
+            }
         }
         return outOfPlace;
+
     }
 
     // sum of Manhattan distances between blocks and goal
@@ -97,7 +102,7 @@ public class Board{
         int row2 = 0, col2 = 0; //row and col of solution board;
         int number; //number that we are comparing
 
-        /*
+        /**
          * n | / | %
          * 0   0   0
          * 1   0   1
@@ -258,14 +263,29 @@ public class Board{
         int[][] board2 = {{ 2, 1 }, { 0,3 }};
         int[][] board3 = {{ 3, 7, 11, 0 },{ 2, 6, 10, 14 },{ 1, 5, 13, 15 },{ 4, 8, 12, 9 }}; // {1 2 3 4}, {5 6 7 8}, {9 10 11 12}, {13 14 15 0}
 
+
+
         Board myBoard3 = new Board(board3);
+
+        // loop used to check if 1D comparison is working correctly
+//        for(int i = 0; i < myBoard3.board1D.length; i++) {
+//            System.out.print(myBoard3.board1D[i] + ", ");
+//        }
+//        StdOut.println();
+//        for(int i = 0; i < myBoard3.board1D.length - 1; i++) {
+//            System.out.print((i + 1) + ", ");
+//        }
+//        System.out.print(0);
+
+
+        StdOut.println();
         StdOut.println("----------");
         StdOut.println("Board: ");
         StdOut.println(myBoard3);
         StdOut.println("Neighbor: ");
         StdOut.println(myBoard3.neighbors());
-        StdOut.println("Hamming: ");
-        StdOut.println(myBoard3.hamming());
+        StdOut.println("Hamming: " + myBoard3.hamming());
+        StdOut.println("Expected Hamming: 14");
 //        StdOut.println("Solution: ");
 //        StdOut.println(new Board3(myBoard3.getGoal()));
 //        StdOut.println("Manhattan Value: " + myBoard3.manhattan());
@@ -278,8 +298,8 @@ public class Board{
         StdOut.println(myBoard);
         StdOut.println("Neighbor: ");
         StdOut.println(myBoard.neighbors());
-        StdOut.println("Hamming: ");
-        StdOut.println(myBoard.hamming());
+        StdOut.println("Hamming: " + myBoard.hamming());
+        StdOut.println("Expected Hamming: 6");
 //        StdOut.println("Solution: ");
 //        StdOut.println(new Board(myBoard.getGoal()));
 //        StdOut.println("Manhattan Value: " + myBoard.manhattan());
@@ -292,17 +312,15 @@ public class Board{
         StdOut.println(myBoard2);
         StdOut.println("Neighbor: ");
         StdOut.println(myBoard2.neighbors());
-        StdOut.println("Hamming: ");
-        StdOut.println(myBoard2.hamming());
+        StdOut.println("Hamming: " + myBoard2.hamming());
+        StdOut.println("Expected Hamming: 3");
 //        StdOut.println("Solution: ");
 //        StdOut.println(new Board(myBoard2.getGoal()));
 //        StdOut.println("Manhattan Value: " + myBoard2.manhattan());
 //        StdOut.println("Hamming Value: " + myBoard2.hamming());
 //        StdOut.println();
 
-        if(myBoard.board == myBoard.solution) {
-            System.out.print(true);
-        }
+        if(myBoard.board == myBoard.solution) { System.out.print(true); }
         else { System.out.print(false); }
     }
 
