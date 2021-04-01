@@ -16,6 +16,8 @@ public class Predictor {
     }
 
     public Move predict() {
+        System.out.println(context);
+
         if(contextMap.contains(context)) {
             MoveCounter moveCounter = contextMap.get(context);
             if (moveCounter.left() > moveCounter.right()) {
@@ -47,16 +49,23 @@ public class Predictor {
 
      public void recordMove(Move m) {
         MoveCounter mc = new MoveCounter();
+        this.context = updateContext(this.context, m);
 
-        if(!context.contains("*")) {
-            if(contextMap.contains(context)) {
-                mc.increment(m);
+        if(contextMap.contains(context)) {
+            mc.increment(m);
 
-            } else {
-                contextMap.put(context, mc);
-            }
+        } else {
+            contextMap.put(context, mc);
         }
 
+     }
+
+     private String updateContext(String context, Move m) {
+        StringBuilder sb = new StringBuilder(context);
+        sb.append(m.asChar());
+        sb.deleteCharAt(0);
+
+        return sb.toString();
      }
 
      public static void main(String args[]) {

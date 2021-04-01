@@ -16,7 +16,7 @@ public class CatchTheThief {
             System.exit(0);
         }
         Move glm = getLatestMove();
-
+        predict.recordMove(glm);
         updateScore(predict.predict(), glm);
         startChase();
 
@@ -50,6 +50,7 @@ public class CatchTheThief {
         if(prediction.equals(userChoice)) {
             policeScore++;
             StdOut.print("The prediction was correct. ");
+
             printScore();
         } else {
             userScore++;
