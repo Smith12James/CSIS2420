@@ -9,8 +9,8 @@ package ceHash;
 public class MoveCounter {
 	int left;    // counts how often Choice.LEFT has been incremented
 	int right;   // counts how often Choice.RIGHT has been incremented
-	int randLeft;
-	int randRight;
+	int randLeft; // counts how often random left has been incremented
+	int randRight; // counts how often random right has been incremented
 	
 	public int left() {
 		return left;

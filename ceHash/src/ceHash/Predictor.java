@@ -6,11 +6,11 @@ public class Predictor {
     private String context;
     private LinearProbingHashST<String, MoveCounter> contextMap;
 
-
-
     public Predictor() {
         MoveCounter mc = new MoveCounter();
-        context = "****"; // *RLR, LRRL, **RL
+        context = "****"; // ****, -> ***R, -> **RL, -> *RLL, -> RLLR, -> LLRR,
+
+        contextMap = new LinearProbingHashST<String, MoveCounter>();
         contextMap.put(context, mc);
 
     }
