@@ -1,8 +1,6 @@
 package a05;
 
-import edu.princeton.cs.algs4.Point2D;
-import edu.princeton.cs.algs4.RedBlackBST;
-import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.*;
 
 public class PointST<Value> {
 
@@ -50,10 +48,15 @@ public class PointST<Value> {
     public Iterable<Point2D> range(RectHV rect) {
         if(rect.equals(null)) { throw new NullPointerException(); }
 
-        Point2D min = new Point2D(rect.xmin(), rect.xmax());
-        Point2D max = new Point2D(rect.ymin(), rect.ymax());
+        Point2D xPoint = new Point2D(rect.xmin(), rect.xmax());
+        Point2D yPoint = new Point2D(rect.ymin(), rect.ymax());
+        Queue<Point2D> inRange = new Queue<Point2D>();
 
-        return rbt.keys(min, max);
+        for(Point2D point: rbt.keys()) {
+            if(rect.contains(point)) inRange.enqueue(point);
+        }
+
+        return inRange;
     }
 
     // a nearest neighbor to point p; null if the symbol table is empty
@@ -63,6 +66,7 @@ public class PointST<Value> {
 
         double minDistance = Double.MAX_VALUE;
         Point2D nearest = null;
+
         for(Point2D point : rbt.keys()) {
             if(nearest == null) { nearest = point; }
             else {
