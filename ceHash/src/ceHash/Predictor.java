@@ -16,7 +16,6 @@ public class Predictor {
     }
 
     public Move predict() {
-        System.out.println(context);
 
         if(contextMap.contains(context)) {
             MoveCounter moveCounter = contextMap.get(context);
@@ -63,7 +62,7 @@ public class Predictor {
      private String updateContext(String context, Move m) {
         StringBuilder sb = new StringBuilder(context);
         sb.append(m.asChar());
-        sb.deleteCharAt(0);
+        sb.deleteCharAt(1);
 
         return sb.toString();
      }
