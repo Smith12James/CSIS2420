@@ -64,7 +64,7 @@ public class PointST<Value> {
         if(p.equals(null)) { throw new NullPointerException(); }
         else if(rbt.isEmpty()) { return null; }
 
-        double minDistance = Double.MAX_VALUE;
+        double minDistance = rbt.select(0).distanceTo(p);
         Point2D nearest = null;
 
         for(Point2D point : rbt.keys()) {

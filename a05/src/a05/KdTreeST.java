@@ -11,6 +11,7 @@ public class KdTreeST<Value> {
     // construct an empty symbol table of points
     public KdTreeST() {
         rbt = new RedBlackBST<Point2D, Value>();
+
     }
 
     // is the symbol table empty?
