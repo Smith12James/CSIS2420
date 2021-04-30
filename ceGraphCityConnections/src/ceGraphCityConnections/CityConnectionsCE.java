@@ -16,7 +16,7 @@ public class CityConnectionsCE {
         System.out.println("Cities to connect with a bike trail:");
         for (Edge e : prim.edges()) {
             String[] arr = e.toString().split(" ");
-            System.out.printf("%s to %s (%s)\n", sg.nameOf(e.either()), sg.nameOf(e.other(e.either())),
+            System.out.printf("%s to %s (%s.0)\n", sg.nameOf(e.either()), sg.nameOf(e.other(e.either())),
                     arr[1].toString().substring(0, 3));
         }
 
